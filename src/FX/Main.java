@@ -1,5 +1,6 @@
 package FX;
 
+import Util.Map;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.scene.Scene;
@@ -19,7 +20,7 @@ public class Main extends Application{
 	public final static Object obj=new Object();
 
 	Thread unitThread;
-	private int lineLength=30;
+	static int lineLength=30;
 	private int width=900;
 	private int height=720;
 
@@ -30,6 +31,7 @@ public class Main extends Application{
 	@Override
 	public void start(Stage primaryStage){
 
+		new Map(xSize,ySize);
 		Canvas field=new Canvas(width,height);
 		GraphicsContext gcField=field.getGraphicsContext2D();
 

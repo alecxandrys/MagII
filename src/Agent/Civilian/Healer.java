@@ -1,8 +1,9 @@
 package Agent.Civilian;
 
-public class Medic extends Civilian {
-    public Medic(String name) {
+public class Healer extends Civilian {
+    public Healer(String name) {
         super(15, 10,2, name);
+        this.literal='H';
     }
     private int healRange=2;
 

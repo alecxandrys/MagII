@@ -6,6 +6,7 @@ public class Civilian extends BaseAgent {
 
     public Civilian(String name) {
         super(10, 5, 2, name);
+        this.literal='C';
     }
 
     public Civilian(Integer health,Integer energy,Integer speed,String name) {

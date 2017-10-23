@@ -7,6 +7,8 @@ public abstract class BaseAgent {
     private String name;
     private Boolean isAlive;
 
+    protected char literal;
+
     private Integer xCoordinate;
     private Integer yCoordinate;
 
@@ -69,4 +71,8 @@ public abstract class BaseAgent {
         this.speed = speed;
     }
 
+    public char getLiteral()
+    {
+    	return literal;
+    }
 }

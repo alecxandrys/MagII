@@ -14,6 +14,7 @@ public class Military extends BaseAgent {
     }
     public Military(String name) {
         super(20, 5, 2, name);
+        this.literal='M';
     }
     @Override
     public void activity() {
