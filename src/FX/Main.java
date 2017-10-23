@@ -8,6 +8,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
@@ -15,6 +16,7 @@ import javafx.stage.Stage;
 
 public class Main extends Application{
 
+	public final static Object obj=new Object();
 
 	Thread unitThread;
 	private int lineLength=30;
@@ -39,38 +41,23 @@ public class Main extends Application{
 		log.setEditable(false);
 		log.setMaxWidth(300);
 
-		BorderPane root=new BorderPane();
+		FlowPane topPane=new FlowPane();
 
-		Button btn=new Button();
-		btn.setText("Начать симуляцию");
+		Button btn=new Button("Начать симуляцию");
 		btn.addEventHandler(ActionEvent.ACTION,event->{
 			Button button=(Button) event.getTarget();
 			if( button.getText().equals("Начать симуляцию") ){
 				unitThread=new Thread(new UnitController(gcUnit,log));
 				unitThread.start();
-				button.setText("Пауза");
-				Button stop=new Button("Остановить");
-				stop.addEventHandler(ActionEvent.ACTION,event1->{
-					button.setDisable(true);
-					unitThread.interrupt();
-				});
-				root.setTop(new Button());
-			}else if( button.getText().equals("Пауза") ){
-				try{
-					unitThread.wait();
-					button.setText("Продолжить");
-					log.appendText("Симуляция остановлена\n");
-				} catch( InterruptedException e ){
-					e.printStackTrace();
-				}
-			}else if( button.getText().equals("Пауза") ){
-				unitThread.notify();
-				log.appendText("Симуляция продолжена\n");
-				button.setText("Пауза");
-			}
-		});
-
-		root.setTop(btn);
+				button.setText("Остановить");
+			}else if( button.getText().equals("Остановить") ){
+				unitThread.interrupt();
+				log.appendText("Симуляция остановлена");
+				button.setDisable(true);
+		}});
+		topPane.getChildren().add(btn);
+		BorderPane root=new BorderPane();
+		root.setTop(topPane);
 		Pane pane=new Pane();
 		pane.getChildren().addAll(field,unit);
 		root.setCenter(pane);

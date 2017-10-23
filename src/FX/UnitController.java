@@ -69,4 +69,5 @@ public class UnitController implements Runnable {
 		}
         log.appendText("Симуляция закончилась\n");
     }
+
 }
