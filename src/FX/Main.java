@@ -25,8 +25,8 @@ public class Main extends Application{
 	private int height=720;
 
 	static long refreshRate=500;
-	static int xSize=30;
-	static int ySize=23;
+	public static int xSize=30;
+	public static int ySize=23;
 
 	@Override
 	public void start(Stage primaryStage){

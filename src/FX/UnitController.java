@@ -17,8 +17,8 @@ public class UnitController implements Runnable{
 
 	private GraphicsContext gc;
 	private TextArea log;
-	private ArrayList< BaseAgent > redTeam;
-	private ArrayList< BaseAgent > blueTeam;
+	static public ArrayList< BaseAgent > redTeam;
+	static public ArrayList< BaseAgent > blueTeam;
 
 	UnitController(GraphicsContext gc,TextArea log){
 		this.gc=gc;
@@ -102,14 +102,14 @@ public class UnitController implements Runnable{
 		while( !Thread.interrupted() ){
 			gc.clearRect(0,0,Main.xSize*Main.lineLength,Main.ySize*Main.lineLength);
 
-			redTeam.forEach(elem->{
+			redTeam.forEach((elem)->{
 				elem.activity();
 				gc.setFill(Color.RED);
 				gc.fillOval(elem.getCoordinate()[0]*Main.lineLength,elem.getCoordinate()[1]*Main.lineLength,Main.lineLength,Main.lineLength);
 				gc.setFill(Color.BLACK);
 				gc.fillText(String.valueOf(elem.getLiteral()),elem.getCoordinate()[0]*Main.lineLength,elem.getCoordinate()[1]*Main.lineLength,Main.lineLength);
 			});
-			blueTeam.forEach(elem->{
+			blueTeam.forEach((elem)->{
 				elem.activity();
 				gc.setFill(Color.BLUE);
 				gc.fillOval(elem.getCoordinate()[0]*Main.lineLength,elem.getCoordinate()[1]*Main.lineLength,Main.lineLength,Main.lineLength);
@@ -126,15 +126,16 @@ public class UnitController implements Runnable{
 		log.appendText("Симуляция закончилась\n");
 	}
 
-	private BaseAgent place(BaseAgent a){
+	public BaseAgent place(BaseAgent a){
 		boolean empty=false;
 		while( !empty ){
 			int i=(int) (Math.random()*Main.xSize);
 			int j=(int) (Math.random()*Main.ySize);
 
-			if( Map.placed[i][j] ){
+			if( !Map.placed[i][j] ){
 				a.setCoordinate(i,j);
 				empty=true;
+				Map.placed[i][j]=true;
 			}
 		}
 		return a;
