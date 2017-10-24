@@ -17,6 +17,12 @@ public class PotentionalMap{
 	private PotentionalMap(){}
 
 	private float[][] result=new float[Main.xSize][Main.ySize];
+
+	/**
+	 * Получаем наилучшие координаты, к которым стремимся
+	 * @param isRed 1 если красные, -1 если синие для правильного учета потенциала
+	 * @return координата с наибольшим (лучшим) потенциалом
+	 */
 	public Integer[] getBestCoordinate(int isRed)
 	{
 		getMap(isRed);

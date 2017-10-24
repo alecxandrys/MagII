@@ -5,20 +5,22 @@ import Agent.BaseAgent;
 public class Military extends BaseAgent {
     int attackRange=1;
     private int damage=2;
-    public Military(Integer health, Integer energy,  Integer speed, String name, Integer damage) {
-        super(health, energy, speed, name);
+    public Military(Integer health, Integer energy,  Integer speed, String name, Integer damage,int isRed) {
+        super(health, energy, speed, name, isRed);
         this.damage=damage;
     }
-    public Military(Integer health, Integer energy,  Integer speed, String name) {
-        super(health, energy, speed, name);
+    public Military(Integer health, Integer energy,  Integer speed, String name,int isRed) {
+        super(health, energy, speed, name, isRed);
     }
-    public Military(String name) {
-        super(20, 5, 2, name);
+    public Military(String name,int isRed) {
+        super(20, 5, 2, name, isRed);
         this.literal='M';
     }
     @Override
-    public void activity() {
+    public String activity() {
+	    StringBuilder log=new StringBuilder();
 
+	    return log.toString();
     }
 
     public int getDamage()
