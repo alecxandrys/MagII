@@ -8,39 +8,40 @@ import Agent.Military.Berserk;
 import Agent.Military.Military;
 import Util.Index;
 import Util.Map;
+import javafx.application.Platform;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.TextArea;
 import javafx.scene.paint.Color;
 
-import java.util.ArrayList;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class UnitController implements Runnable{
 
 	private GraphicsContext gc;
 	private TextArea log;
-	static public ArrayList< BaseAgent > redTeam;
-	static public ArrayList< BaseAgent > blueTeam;
+	static public CopyOnWriteArrayList< BaseAgent > redTeam;
+	static public CopyOnWriteArrayList< BaseAgent > blueTeam;
 
 	UnitController(GraphicsContext gc,TextArea log){
 		this.gc=gc;
 		this.log=log;
 		int count=(int) (Math.random()*9+1);//1-10
-		redTeam=new ArrayList<>(count);
-		blueTeam=new ArrayList<>(count);
+		redTeam=new CopyOnWriteArrayList<>();
+		blueTeam=new CopyOnWriteArrayList<>();
 		for( int i=0; i<count; i++ ){
-			int type=(int) (Math.random()*5);
+			int type=(int) (Math.random()*2);
 			switch( type ){
 				case 0:{
 					redTeam.add(place(new Civilian("Red Civilian #"+Index.rt0,1)));
 					Index.rt0++;
 					break;
 				}
-				case 1:{
+				case 2:{
 					redTeam.add(place(new Healer("Red Healer #"+Index.rt1,1)));
 					Index.rt1++;
 					break;
 				}
-				case 2:{
+				case 1:{
 					redTeam.add(place(new Military("Red Military #"+Index.rt2,1)));
 					Index.rt2++;
 					break;
@@ -59,19 +60,19 @@ public class UnitController implements Runnable{
 			}
 		}
 		for( int i=0; i<count; i++ ){
-			int type=(int) (Math.random()*5);
+			int type=(int) (Math.random()*2);
 			switch( type ){
 				case 0:{
 					blueTeam.add(place(new Civilian("Blue Civilian #"+Index.bt0,-1)));
 					Index.bt0++;
 					break;
 				}
-				case 1:{
+				case 2:{
 					blueTeam.add(place(new Healer("Blue Healer #"+Index.bt1,-1)));
 					Index.bt1++;
 					break;
 				}
-				case 2:{
+				case 1:{
 					blueTeam.add(place(new Military("Blue Military #"+Index.bt2,-1)));
 					Index.bt2++;
 					break;
@@ -95,29 +96,39 @@ public class UnitController implements Runnable{
 	public void run(){
 		log.appendText("Симуляция началась\n");
 		while( !Thread.interrupted() ){
-			redTeam.forEach((elem)->{
-				log.appendText(elem.activity());
+			for( BaseAgent elem : redTeam ){
+				if ( blueTeam.isEmpty()) {log.appendText("Синяя команда уничтожена");break;}
+				String mess=elem.activity();
+				Platform.runLater(()->log.appendText(mess));
 				gc.setFill(Color.RED);
-				gc.fillOval(elem.getCoordinate()[0]*Main.lineLength,elem.getCoordinate()[1]*Main.lineLength,Main.lineLength,Main.lineLength);
+				gc.fillOval(elem.getCoordinate()[0]*Main.lineLength,elem.getCoordinate()[1]*Main.lineLength,Main.lineLength,Main
+						.lineLength);
 				gc.setFill(Color.BLACK);
-				gc.fillText(String.valueOf(elem.getLiteral()),elem.getCoordinate()[0]*Main.lineLength,elem.getCoordinate()[1]*Main.lineLength,Main.lineLength);
-			});
-			blueTeam.forEach((elem)->{
-				log.appendText(elem.activity());
+				gc.fillText(String.valueOf(elem.getLiteral()),elem.getCoordinate()[0]*Main.lineLength,elem.getCoordinate()[1]*Main
+						.lineLength,Main.lineLength);
+			}
+			for( BaseAgent elem : blueTeam ){
+				if (redTeam.isEmpty()) {log.appendText("Красная команда уничтожена");break;}
+				String mess=elem.activity();
+				Platform.runLater(()->log.appendText(mess));
 				gc.setFill(Color.BLUE);
-				gc.fillOval(elem.getCoordinate()[0]*Main.lineLength,elem.getCoordinate()[1]*Main.lineLength,Main.lineLength,Main.lineLength);
+				gc.fillOval(elem.getCoordinate()[0]*Main.lineLength,elem.getCoordinate()[1]*Main.lineLength,Main.lineLength,Main
+						.lineLength);
 				gc.setFill(Color.BLACK);
-				gc.fillText(String.valueOf(elem.getLiteral()),elem.getCoordinate()[0]*Main.lineLength,elem.getCoordinate()[1]*Main.lineLength,Main.lineLength);
-			});
+				gc.fillText(String.valueOf(elem.getLiteral()),elem.getCoordinate()[0]*Main.lineLength,elem.getCoordinate()[1]*Main
+						.lineLength,Main.lineLength);
+			}
+
 			try{
 				Thread.sleep(Main.refreshRate);
 			} catch( InterruptedException e ){
-				e.printStackTrace();
-				log.appendText("Симуляция закончилась\n");
+
+				break;
 			}
+
 			gc.clearRect(0,0,Main.xSize*Main.lineLength,Main.ySize*Main.lineLength);
 		}
-		log.appendText("Симуляция закончилась\n");
+		Platform.runLater(()->log.appendText("Симуляция закончилась\n"));
 	}
 
 	private BaseAgent place(BaseAgent a){

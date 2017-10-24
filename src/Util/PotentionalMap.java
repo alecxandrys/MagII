@@ -46,17 +46,16 @@ public class PotentionalMap{
 		return coordinate;
 
 	}
-	private float[][] getMap(int isRed){
+	private void getMap(int isRed){
 		for( int i=0; i<Main.xSize; i++ ){
 			for( int j=0; j<Main.ySize; j++ ){
 				result[i][j]=0;
 			}
 		}
-		UnitController.redTeam.forEach((elem)->result=count(result,elem,isRed));
-		UnitController.blueTeam.forEach((elem)->result=count(result,elem,isRed));
-		return result;
+		UnitController.redTeam.forEach((elem)->count(elem,isRed));
+		UnitController.blueTeam.forEach((elem)->count(elem,isRed));
 	}
-	private float[][] count(float [][] result,BaseAgent elem,int isRed)
+	private void count(BaseAgent elem,int isRed)
 	{
 		if( elem.getLiteral()=='M'||elem.getLiteral()=='B'||elem.getLiteral()=='A' ){
 			Military element=(Military) elem;
@@ -64,12 +63,10 @@ public class PotentionalMap{
 				for( int j=0; j<Main.ySize; j++ ){
 					int distance=Path.getSingle().getDistance(element.getCoordinate()[0],element.getCoordinate()[1],i,j);
 					int range=element.getAttackRange()+element.getSpeed();
-					if( distance<=range){
-						result[i][j]=result[i][j]+(isRed)*(range/distance);
-					}
+						distance++;
+						result[i][j]=result[i][j]+(isRed)*((float)range/(float)distance);
 				}
 			}
 		}
-		return result;
 	}
 }

@@ -1,8 +1,10 @@
 package Util;
 
 import Agent.BaseAgent;
+import FX.UnitController;
 
 import java.util.ArrayList;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class Path{
 	private static Path single=null;
@@ -27,19 +29,39 @@ public class Path{
 	public ArrayList< int[] > getPath(int x1,int y1,int x2,int y2){
 		Integer distance=getDistance(x1,y1,x2,y2);
 		ArrayList< int[] > path=new ArrayList<>(distance);
-		int cur_x=x1, cur_y=y2;
-
-		while( cur_x!=x2&cur_y!=y2 ){
-			if( cur_x!=x2 ){
-				if( cur_x>x2 ){cur_x--;}else{cur_x++;}
-				path.add(new int[]{cur_x,cur_y});
+		while( distance>0 ){
+			if( x1!=x2 ){
+				if( x1>x2 ){x1--;}else{x1++;}
+				path.add(new int[]{x1,y1});
+				distance--;
 			}
-			if( cur_y!=y2 ){
-				if( cur_y>y2 ){cur_y--;}else{cur_y++;}
-				path.add(new int[]{cur_x,cur_y});
+			if (distance<=0) break;
+			if( y1!=y2 ){
+				if( y1>y2 ){y1--;}else{y1++;}
+				path.add(new int[]{x1,y1});
+				distance--;
 			}
 		}
-		path.remove(path.size()-1);//удалить последнюю точку
+		//path.remove(path.size()-1);//удалить последнюю точку
 		return path;
 	}
+
+	public int getClosestEnemy(BaseAgent agent){
+		CopyOnWriteArrayList< BaseAgent > list;
+		if( agent.getIsRed()==1 ){
+			list=UnitController.blueTeam;
+		}else{list=UnitController.redTeam;}
+		int cur_index=0, distance=10000, min_index=0;
+		for( BaseAgent elem : list ){
+			int range=Path.getSingle().getDistance(agent.getCoordinate()[0],agent.getCoordinate()[0],elem.getCoordinate()[0],elem
+					.getCoordinate()[1]);
+			if( range<distance ){
+				min_index=cur_index;
+				distance=range;
+			}
+			cur_index++;
+		}
+		return min_index;
+	}
 }
+

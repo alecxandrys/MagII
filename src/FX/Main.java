@@ -2,6 +2,7 @@ package FX;
 
 import Util.Map;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -16,8 +17,6 @@ import javafx.stage.Stage;
 
 
 public class Main extends Application{
-
-	public final static Object obj=new Object();
 
 	Thread unitThread;
 	static int lineLength=30;
@@ -42,7 +41,6 @@ public class Main extends Application{
 		TextArea log=new TextArea("Лог сообщении\n");
 		log.setEditable(false);
 		log.setMaxWidth(300);
-
 		FlowPane topPane=new FlowPane();
 
 		Button btn=new Button("Начать симуляцию");

@@ -4,6 +4,7 @@ import Agent.BaseAgent;
 import Agent.Military.Archer;
 import Agent.Military.Berserk;
 import Agent.Military.Military;
+import FX.Main;
 import FX.UnitController;
 import Util.Index;
 import Util.Map;
@@ -24,35 +25,38 @@ public class Civilian extends BaseAgent{
 
 	private String grow(){
 		StringBuilder log=new StringBuilder("");
-		int type=(int) (Math.random()*5);
+		int type=(int) (Math.random()*2);
 		BaseAgent newbi=null;
+		String color;
+		if (getIsRed()==1){color="Red";}
+		else {color="Blue";}
 		switch( type ){
 			case 0:{
-				log.append("Blue Civilian #").append(Index.bt0);
+				log.append(color).append(" Civilian #").append(Index.bt0);
 				newbi=new Civilian(log.toString(),getIsRed());
 				Index.bt0++;
 				break;
 			}
-			case 1:{
-				log.append("Blue Healer #").append(Index.bt1);
+			case 2:{
+				log.append(color).append(" Healer #").append(Index.bt1);
 				newbi=new Healer(log.toString(),getIsRed());
 				Index.bt1++;
 				break;
 			}
-			case 2:{
-				log.append("Blue Military #").append(Index.bt2);
+			case 1:{
+				log.append(color).append(" Military #").append(Index.bt2);
 				newbi=new Military(log.toString(),getIsRed());
 				Index.bt2++;
 				break;
 			}
 			case 3:{
-				log.append("Blue Berserk #").append(Index.bt3);
+				log.append(color).append(" Berserk #").append(Index.bt3);
 				newbi=new Berserk(log.toString(),getIsRed());
 				Index.bt3++;
 				break;
 			}
 			case 4:{
-				log.append("Blue Archer #").append(Index.bt4);
+				log.append(color).append(" Archer #").append(Index.bt4);
 				newbi=new Archer(log.toString(),getIsRed());
 				Index.bt4++;
 				break;
@@ -60,6 +64,8 @@ public class Civilian extends BaseAgent{
 			default:{break;}
 		}
 		for( int i=0; i<Map.shifts.length; i++ ){
+			if(getCoordinate()[0]+Map.shifts[i][0]>=Main.xSize | getCoordinate()[0]+Map.shifts[i][0]<0) continue;
+			if(getCoordinate()[1]+Map.shifts[i][1]>=Main.ySize | getCoordinate()[1]+Map.shifts[i][1]<0) continue;
 			if (!Map.placed[getCoordinate()[0]+Map.shifts[i][0]][getCoordinate()[1]+Map.shifts[i][1]])
 			{
 				newbi.setCoordinate(getCoordinate()[0]+Map.shifts[i][0],getCoordinate()[1]+Map.shifts[i][1]);
@@ -89,7 +95,7 @@ public class Civilian extends BaseAgent{
 		if( getEnergy()>=10 ){
 			String result=grow();
 			if( !Objects.equals(result,"") ){
-				log.append(getName()).append(" порождает нового участника ").append(result).append("\n");
+				log.append(getName()).append(" порождает нового участника:\n").append(result).append("\n");
 			}
 		}
 		return log.toString();
