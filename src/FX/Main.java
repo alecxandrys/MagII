@@ -23,7 +23,7 @@ public class Main extends Application{
 	private int width=900;
 	private int height=720;
 
-	static long refreshRate=500;
+	static long refreshRate=100;
 	public static int xSize=30;
 	public static int ySize=23;
 

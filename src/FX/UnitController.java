@@ -25,7 +25,7 @@ public class UnitController implements Runnable{
 	UnitController(GraphicsContext gc,TextArea log){
 		this.gc=gc;
 		this.log=log;
-		int count=(int) (Math.random()*9+1);//1-10
+		int count=(int) (Math.random()*8+2);//1-10
 		redTeam=new CopyOnWriteArrayList<>();
 		blueTeam=new CopyOnWriteArrayList<>();
 		for( int i=0; i<count; i++ ){
@@ -95,38 +95,55 @@ public class UnitController implements Runnable{
 	@Override
 	public void run(){
 		log.appendText("Симуляция началась\n");
-		while( !Thread.interrupted() ){
+		boolean finished=false;
+		gc.clearRect(0,0,Main.xSize*Main.lineLength,Main.ySize*Main.lineLength);
+		while( !Thread.interrupted()|!finished ){
 			for( BaseAgent elem : redTeam ){
-				if ( blueTeam.isEmpty()) {log.appendText("Синяя команда уничтожена");break;}
+				if( blueTeam.isEmpty() ){
+					log.appendText("Синяя команда уничтожена\n");
+					finished=true;
+					break;
+				}
+				gc.clearRect(elem.getCoordinate()[0]*Main.lineLength,elem.getCoordinate()[1]*Main.lineLength,Main.lineLength,Main
+						.lineLength);
+				if (!elem.getAlive()){redTeam.remove(elem);continue;}
 				String mess=elem.activity();
 				Platform.runLater(()->log.appendText(mess));
 				gc.setFill(Color.RED);
 				gc.fillOval(elem.getCoordinate()[0]*Main.lineLength,elem.getCoordinate()[1]*Main.lineLength,Main.lineLength,Main
 						.lineLength);
 				gc.setFill(Color.BLACK);
-				gc.fillText(String.valueOf(elem.getLiteral()),elem.getCoordinate()[0]*Main.lineLength,elem.getCoordinate()[1]*Main
-						.lineLength,Main.lineLength);
+				gc.fillText(String.valueOf(elem.getLiteral()),elem.getCoordinate()[0]*Main.lineLength,elem.getCoordinate()[1]*(Main
+						.lineLength)+Main.lineLength/2,Main.lineLength/2);
+				try{
+					Thread.sleep(Main.refreshRate);
+				} catch( InterruptedException e ){
+					break;
+				}
 			}
 			for( BaseAgent elem : blueTeam ){
-				if (redTeam.isEmpty()) {log.appendText("Красная команда уничтожена");break;}
+				if( redTeam.isEmpty() ){
+					log.appendText("Красная команда уничтожена\n");
+					finished=true;
+					break;
+				}
+				gc.clearRect(elem.getCoordinate()[0]*Main.lineLength,elem.getCoordinate()[1]*Main.lineLength,Main.lineLength,Main
+						.lineLength);
+				if (!elem.getAlive()){blueTeam.remove(elem);continue;}
 				String mess=elem.activity();
 				Platform.runLater(()->log.appendText(mess));
 				gc.setFill(Color.BLUE);
 				gc.fillOval(elem.getCoordinate()[0]*Main.lineLength,elem.getCoordinate()[1]*Main.lineLength,Main.lineLength,Main
 						.lineLength);
 				gc.setFill(Color.BLACK);
-				gc.fillText(String.valueOf(elem.getLiteral()),elem.getCoordinate()[0]*Main.lineLength,elem.getCoordinate()[1]*Main
-						.lineLength,Main.lineLength);
+				gc.fillText(String.valueOf(elem.getLiteral()),elem.getCoordinate()[0]*Main.lineLength,elem.getCoordinate()[1]*(Main
+						.lineLength)+Main.lineLength/2,Main.lineLength/2);
+				try{
+					Thread.sleep(Main.refreshRate);
+				} catch( InterruptedException e ){
+					break;
+				}
 			}
-
-			try{
-				Thread.sleep(Main.refreshRate);
-			} catch( InterruptedException e ){
-
-				break;
-			}
-
-			gc.clearRect(0,0,Main.xSize*Main.lineLength,Main.ySize*Main.lineLength);
 		}
 		Platform.runLater(()->log.appendText("Симуляция закончилась\n"));
 	}

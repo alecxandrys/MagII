@@ -24,8 +24,6 @@ public abstract class BaseAgent{
 
 	protected void death(){
 		this.isAlive=false;
-		if( getIsRed()==1 ){UnitController.redTeam.remove(this);}
-		else {UnitController.blueTeam.remove(this);}
 	}
 
 	public BaseAgent(Integer health,Integer energy,Integer speed,String name,int isRed){
@@ -89,7 +87,7 @@ public abstract class BaseAgent{
 		int curPos;
 		if (path.size()>this.speed)
 		{
-			curPos=this.speed-1;//скорость с 1, индекс с 0
+			curPos=this.speed;//скорость с 1, индекс с 0
 		}
 		else if (path.size()==0) {return false;}
 		else {curPos=path.size()-1;}

@@ -53,7 +53,7 @@ public class PotentionalMap{
 			}
 		}
 		UnitController.redTeam.forEach((elem)->count(elem,isRed));
-		UnitController.blueTeam.forEach((elem)->count(elem,isRed));
+		UnitController.blueTeam.forEach((elem)->count(elem,-1*isRed));
 	}
 	private void count(BaseAgent elem,int isRed)
 	{
@@ -63,8 +63,10 @@ public class PotentionalMap{
 				for( int j=0; j<Main.ySize; j++ ){
 					int distance=Path.getSingle().getDistance(element.getCoordinate()[0],element.getCoordinate()[1],i,j);
 					int range=element.getAttackRange()+element.getSpeed();
-						distance++;
-						result[i][j]=result[i][j]+(isRed)*((float)range/(float)distance);
+						if (distance<=range)
+						{
+							result[i][j]=result[i][j]+(isRed)*((float)range/(float)distance);
+						}
 				}
 			}
 		}

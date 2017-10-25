@@ -15,7 +15,7 @@ import java.util.Objects;
 public class Civilian extends BaseAgent{
 
 	public Civilian(String name,int isRed){
-		super(10,5,2,name,isRed);
+		super(5,5,2,name,isRed);
 		this.literal='C';
 	}
 
@@ -27,6 +27,7 @@ public class Civilian extends BaseAgent{
 		StringBuilder log=new StringBuilder("");
 		int type=(int) (Math.random()*2);
 		BaseAgent newbi=null;
+		setEnergy(getEnergy()-10);
 		String color;
 		if (getIsRed()==1){color="Red";}
 		else {color="Blue";}
@@ -78,7 +79,6 @@ public class Civilian extends BaseAgent{
 				{
 					UnitController.blueTeam.add(newbi);
 				}
-				setEnergy(getEnergy()-10);
 				return log.toString();
 			}
 		}

@@ -46,22 +46,21 @@ public class Path{
 		return path;
 	}
 
-	public int getClosestEnemy(BaseAgent agent){
+	public BaseAgent getClosestEnemy(BaseAgent agent){
 		CopyOnWriteArrayList< BaseAgent > list;
 		if( agent.getIsRed()==1 ){
 			list=UnitController.blueTeam;
 		}else{list=UnitController.redTeam;}
 		int cur_index=0, distance=10000, min_index=0;
 		for( BaseAgent elem : list ){
-			int range=Path.getSingle().getDistance(agent.getCoordinate()[0],agent.getCoordinate()[0],elem.getCoordinate()[0],elem
-					.getCoordinate()[1]);
+			int range=Path.getSingle().getDistance(agent,elem);
 			if( range<distance ){
 				min_index=cur_index;
 				distance=range;
 			}
 			cur_index++;
 		}
-		return min_index;
+		return list.get(min_index);
 	}
 }
 
